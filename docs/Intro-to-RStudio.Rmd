@@ -1,6 +1,8 @@
 ---
 title: "Introduction to R/RStudio"
 output:
+  word_document:
+    toc: yes
   html_document:
     toc: yes
 ---
@@ -11,13 +13,13 @@ At the end of this session you should be able to:
 
 * Perform basic arithmetic using R/RStudio
 * Identify the major components of the RStudio interface
-* Create an R script file and use it to document a sequence of R functions
+* Create an Rmd file and use it to document a sequence of R functions
 * Read in a data set and perform basic data summary procedures in R
 
 ## Getting started
 
 For this session, you can either work in RStudio on your own computer (R/RStudio install instructions can be found [here](https://www.rstudio.com/products/rstudio/download/#download)) or you can work in an RStudio Cloud session. 
-To start an RStudio Cloud session go to [https://rstudio.cloud/](https://rstudio.cloud/) and log in using your GitHub account.
+To start an RStudio Cloud session go to [https://rstudio.cloud/](https://rstudio.cloud/) and used your prefered log in method, or create a new account.
 
 ### Difference between R and RStudio
 
@@ -40,10 +42,10 @@ There are four panels in the RStudio interface (though you may only have three o
 
 Good file management is important in data science. We'll start working on this now.
 
-* Make a `ESA-2021-DataSci` directory / folder
-* Make a `data` directory / folder within `ESA-2021-DataSci`
-* Make a `scripts` directory / folder within `ESA-2021-DataSci`
-* In RStudio, set working directory to your new ``ESA-2021-DataSci`` directory
+* Make a `ESA-2022-DataSci` directory / folder
+* Make a `data` directory / folder within `ESA-2022-DataSci`
+* Make a `scripts` directory / folder within `ESA-2022-DataSci`
+* In RStudio, set working directory to your new ``ESA-2022-DataSci`` directory
 
 #### Setting your working directory
 
@@ -52,15 +54,15 @@ Point-and-click method - Use 'Session' > 'Set Working Directory' > 'Choose Direc
 Using the R Console:
 
 ```{r, eval=FALSE}
-setwd("/Users/maiellolammens/ESA-2021-DataSci/")
+setwd("/Users/maiellolammens/ESA-2022-DataSci/")
 ```
 
 ### Making an R Project
 
-Let's make a new R Project associated with your `ESA-2021-DataSci` directory. 
+Let's make a new R Project associated with your `ESA-2022-DataSci` directory. 
 To make a new project, got to the upper right-hand side of the RStudio interface, where it says **Project: (None)**.
 Click the little downward arrow, select "New Project", then select "Existing Directory" from the window that pops up. 
-Use the graphical user interface (GUI) to navigate to the `ESA-2021-DataSci` directory, then select "Create Project".
+Use the graphical user interface (GUI) to navigate to the `ESA-2022-DataSci` directory, then select "Create Project".
 
 ### Getting help
 
@@ -75,7 +77,7 @@ help.search("bar plot")
 
 Use the `help.search` function to search for something in statistics that you think should be in R? Did you find anything?
 
-* I know my function - just give me the details - `?barplot`
+> I know my function - just give me the details - `?barplot`
 
 
 ## R as calculator
@@ -124,10 +126,11 @@ R Markdown is a tool that allows you to make a simple text document using the Ma
 
 ### Starting with R Markdown
 
-Go to the new file button (upper left corner of the RStudio interface, or `File` -> `New File`) and choose the R Markdown option. 
-A screen will pop-up requesting information such as Title, Author, and Output Format. 
+1. Go to the new file button (upper left corner of the RStudio interface, or `File` -> `New File`) and choose the R Markdown option. 
+2. You may be prompted to install new R packages, let's go ahead and do this if you are prompted.
+3. A screen will pop-up requesting information such as Title, Author, and Output Format. 
 Give your new doc a title and select **HTML** as the output format.
-A new file that is pre-populated with a bunch of text will open in the `Source` panel.
+4. A new file that is pre-populated with a bunch of text will open in the `Source` panel.
 
 We will go over each section briefly:
 
@@ -141,9 +144,8 @@ When you click the **Knit** button a document will be generated that includes bo
 
 Another common file format for documenting your work is an *.R script file.
 Script files are primarily filled with only code and minimal *comments* that you can include to explain that code.
-**Important:** within an R file, you can use the # sign to add comments. 
-Anything written after the # is **not** interpreted when you run the code.
-You can print a script file, but it will print as a simple text file without any formatting.
+
+> **Important:** within an R file, you can use the # sign to add comments. Anything written after the # is **not** interpreted when you run the code. You can print a script file, but it will print as a simple text file without any formatting.
 
 ***
 
@@ -241,7 +243,7 @@ What is the value of `my_var_tot` now?
 
 ### Make a vector
 
-Let's combine multiple values into a vector of length greater than 1.
+Let's combine multiple values into a vector of length greater than 1. This introduces us to the one of the most prevalent functions in R, `c()` - i.e., the *combine* function.
 
 ```{r}
 # Vector of variables
@@ -299,17 +301,23 @@ pets[c(1,4)]
 ### Reading in your own data
 
 One of the most basic things you will need to do in R is read in your own data set. 
-You can read in Excel files, simple text files, and even files from Google Sheets.
+You can read in Excel files, simple text files, and even files from Google Sheets (this is a bit more complicated though).
 But the easiest type of file to read in is a comma separated values (CSV) file. 
 You can save an Excel workbook (or Numbers workbook or Google Sheet) as a CSV file by using the "Save as ..." menu item. 
 
 Let's read in the soil data from our Speed Data Science activity using the function `read.csv`.
-Note that in this example, we are reading this file using a URL that points to it, but you can just as easily read in a file on your local system (in fact, this is much more common!).
+First, you'll need to download the data set from the QUBES site for this workshop. 
+Second, move the file to the `data` sub-folder in your `ESA-2022-DataSci` folder.
+Then, we'll read in the file. **NOTE: you may need to adjust the path to the file.**
 
-```{r soil_data}
-soil_data <- read.csv("https://mlammens.github.io/ESA-2021-BEDE-Network/docs/soil_nutrient_data.csv")
+```{r, echo=FALSE}
+soil_data <- read.csv("soil_nutrient_data.csv")
 ```
 
+
+```{r soil_data, eval=FALSE}
+soil_data <- read.csv("data/soil_nutrient_data.csv")
+```
 
 Let's have a brief look at these data.
 
@@ -518,7 +526,7 @@ At the end of this session you should be able to:
 
 * Perform basic arithmetic using R/RStudio
 * Identify the major components of the RStudio interface
-* Create an R script file and use it to document a sequence of R functions
+* Create an Rmd file and use it to document a sequence of R functions
 * Read in a data set and perform basic data summary procedures in R
 
 ### Assessment

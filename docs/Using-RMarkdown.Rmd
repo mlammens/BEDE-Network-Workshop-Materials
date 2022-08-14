@@ -46,7 +46,7 @@ Let's make a chunk to add the soil data set.
 
 
 ```{r soil_data}
-soil_data <- read.csv("https://mlammens.github.io/ESA-2021-BEDE-Network/docs/soil_nutrient_data.csv")
+soil_data <- read.csv("https://www.dropbox.com/s/ues1zq1rx8at0pq/soil_nutrient_data.csv?dl=1")
 ```
 
 You can execute the R code above by either using one of the "Run" functions (look in the upper-right corner of the editor pane), clicking the little green arrow in the upper right corner of the code chunk (note, this will run all code in the chunk), or by pressing CMD + ENTR (Mac) or CNTR + ENTR (Windows) while your cursor is on the line you wish to execute.
@@ -61,7 +61,7 @@ Before we go on, **Knit** your new report.
 
 ***
 
-#### Challenge - Calculating mean and standard deviation
+#### Challenge - Calculating and comparing mean and standard deviation
 
 Using what you have learned during our earlier lesson, write code in an R chunk to calculate the mean (function `mean`) and standard deviation (function `sd`) for the pound of phosphorus per acre (phosphorus_lbacre) values **for each site**. 
 At the end of this chunk, you should have calculated **five** different mean and standard deviation values.
@@ -70,6 +70,13 @@ At the end of this chunk, you should have calculated **five** different mean and
 # Mean phosphorus at Townhouse site
 mean(soil_data$phosphorus_lbacre[1:5])
 ```
+
+Once you have calculated the values above, compare and contrast the different values at the different sites. 
+What conclusions might you draw from these comparisons? 
+For example, are there areas on campus with lower (or higher) values of phosphorus in the soil than the other areas?
+**Make at least three observations regarding the results of your analysis.**
+
+*Write your observations here.*
 
 ***
 
@@ -83,6 +90,10 @@ library(ggplot2)
 ggplot(data = soil_data, aes(x = site, y = phosphorus_lbacre)) +
   geom_boxplot()
 ```
+
+Based on the visualization you have created, make three observations about your data and what this visualization may help you conclude regarding phosphorus levels in the soil on campus.
+
+*Write your three observations based on the visualization here.*
 
 
 Once you have completed these two tasks, **Knit** your document.
