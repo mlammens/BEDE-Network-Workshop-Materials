@@ -103,6 +103,7 @@ Once you have completed these two tasks, **Knit** your document.
 ## Additional Resources
 
 * [Software Carpentry Lesson on R Markdown](http://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+* [A paper in Mathematical Biosciences discussing the use of R Markdown for teaching](https://www.sciencedirect.com/science/article/pii/S0025556422000499)
 
 ***
 
@@ -115,12 +116,15 @@ The intention is to get students up and running with R Markdown so they can crea
 
 By the end of this lesson, students should be able to:
 
-* Create a new R Markdown file
+* Create a new R Markdown file.
 * Successfully `knit` a document such that the text, code, and output are appropriately formatted.
+* Calculate a mean and standard deviation in R, and use these summary statistics to draw conclusions about a data set.
+* Create a data visualization and use it to interpret a data set.
+
 
 ### Assessment
 
-The outcomes of this activity will be assessed based on student's ability to create a R Markdown document and knit that document successfully into a new HTML report.
+The outcomes of this activity will be assessed based on student's ability to create a R Markdown document, knit that document successfully into a new HTML report, and whether they wrote three observations that were supported by their summary statistic calculations and data visualizations.
 
 ### Learning Activity
 

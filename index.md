@@ -1,84 +1,70 @@
 ---
 title: "Bringing computational data sciences to your undergraduate ecology classroom"
 layout: page
-tagline: ESA 2021 BEDE Network Workshop
-description: Simple page for ESA 2021 BEDE Network workshop
+tagline: ESA 2022 BEDE Network Workshop
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+description: Simple page for ESA 2022 BEDE Network workshop
 ---
 
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 
-## Synopsis
+## Organizers and Contributers
 
-The biological and environmental sciences have been rapidly and fundamentally reshaped by recent technological advances, including increased computational power, sensor technologies, publicly available software and data, and Internet connectivity. These advances, together with the demands that we provide our students with technical skills to navigate data and technology in the 21st century, necessitate the integration of computational data sciences into our undergraduate and graduate classrooms. However, many instructors do not feel qualified or prepared to teach such materials, either for lack of technical skills or pedagogical training, limiting the usefulness of already developed computational course or lab modules. This “train the teachers” short course will include both technical training for fundamental data science skills, including R and Markdown, and pedagogical training for communicating those skills in the classroom and lab. Working through data science examples in-real time, participants will experience the material as a learner and gain strategies toward including and being able to teach these skills in their own courses. Participants will also learn and practice the use of pedagogy techniques, such as backwards design, to envision how data science can be integrated within their courses. The goal is to equip instructors with technical tools and instructional strategies that they can then confidently customize to their own curricular goals and institutional needs.
-
-## Organizers
-
-* Dr. Matthew E. Aiello-Lammens
-* Dr. Sarah R. Supp
-* Dr. Andrew J. Kerkhoff
-* Dr. Naupaka Zimmerman
-
-## Facilitators and Helpers
-
+* **Dr. Matthew E. Aiello-Lammens**
+* Dr. Ellen Bledsoe
 * Dr. Laura Broughton
 * Dr. Olga Calderon
 * Dr. Erika Crispo
 * Dr. Nate Emery
-* Dr. Kelly O'Donnell
-
-## Logistics
-
-* **Date:** Friday, August 6, 2021
-* **Time:** 2:00 PM to 5:00 PM PCT
-* **Place:** Zoom - linked from ESA conference website
+* **Dr. Kelly O'Donnell**
+* **Dr. Sarah R. Supp**
 
 ***
 
 ## Important Links
 
-* Short Course website - [https://mlammens.github.io/ESA-2021-BEDE-Network/](https://mlammens.github.io/ESA-2021-BEDE-Network/)
-* Collaborative note taking and question answering - [https://etherpad.wikimedia.org/p/ESA-2021-BEDE-Network](https://etherpad.wikimedia.org/p/ESA-2021-BEDE-Network)
-* RMarkdown file for R/RStudio session - [example *.Rmd file](https://github.com/mlammens/ESA-2021-BEDE-Network/blob/d8d70b1f2e560501b02d3305d7c08f834cc0aae0/docs/Using-RMarkdown.Rmd?raw=true) (**NOTE** - to download this file you will probably need to right-click and select "Save like as ...")
+* Short Course website (on the QUBES Hub platform) - [https://qubeshub.org/community/groups/bede/collections/esa-2022---bringing-computational-data-sciences-to-your-undergraduate-ecology-classroom-short-course](https://qubeshub.org/community/groups/bede/collections/esa-2022---bringing-computational-data-sciences-to-your-undergraduate-ecology-classroom-short-course)
+* Github page for workshop materials development - [https://github.com/mlammens/BEDE-Network-Workshop-Materials](https://github.com/mlammens/BEDE-Network-Workshop-Materials)
 
 
 ## Schedule
 
-Timing is approximate.
+Times are approximate.
 
-### Introduction to the workshop (30 minutes)
+### Introduction to the workshop (9:00 AM to 9:15 AM)
 
-* Participant introductions - via [etherpad](https://etherpad.wikimedia.org/p/ESA-2021-BEDE-Network)
-* [Brief Introduction to BEDE Network: Rationale and Goals](https://docs.google.com/presentation/d/1KxAfVy63nmY5nP8GGb5kg-XRA0xqoVny/edit?usp=sharing&ouid=104938329295943550532&rtpof=true&sd=true)
-    * Context: The need for data science education in Biology and Environmental Science
-    * Method: Backwards Design
-    * Rationale: Data science, Inclusivity, and Empowerment
-* Introduction to the BEDE Network QUBES Hub site - [https://qubeshub.org/community/groups/bede/](https://qubeshub.org/community/groups/bede/)
+* Brief Introduction to BEDE Network and backward design
+* Context: The need for data science education in Biology and Environmental Science
+* Method: Backwards Design
+* Rationale: Data science, Inclusivity, and Empowerment
 
-### Data science for undergraduate biology and environmental science (30 minutes)
+### Methods and tools for teaching data science in your classroom (9:15 AM to 12:00 Noon)
 
-* Short Presentation: [Data Science Fundamentals](https://docs.google.com/presentation/d/1Ejj2wUeb5Fkj_MwdymZ8xBNalNh25IGy/edit?usp=sharing&ouid=104938329295943550532&rtpof=true&sd=true)
-* Activity: [Speed Data Science](docs/Speed-Data-Science-Activity.html)
+* Activity: 'Speed' Data Science (9:15 AM to 9:45 AM)
+* Example and Activity: Data Science Skills in Sciecne Forward (9:45 AM to 10:45 AM)
+* **Lesson 1:** Introduction to R/RStudio for Instructors (10:45 AM to 12 Noon)
 
-### Concurrent sessions (1 hour 45 minutes)
+### Lunch Break (12:00 Noon to 1:00 PM)
 
-#### Methods and tools for teaching data science in your classroom 
 
-* **Lesson 1:** [Introduction to R/RStudio for Instructors](docs/Intro-to-RStudio.html)
-* **Lesson 2:** [Using Markdown/RMarkdown in the classroom](docs/Using-RMarkdown.html)
+### Methods and tools for teaching data science in your classroom (9:15 AM to 12:00 Noon)
 
-#### Development of data science lessons
+* **Lesson 1:** continuation (1:00 PM to 2:00 PM)
+* **Lesson 2:** Using Markdown/RMarkdown in the classroom (2:00 PM to 2:30 PM)
 
-* Intros and background
-* Examples of data science integration and curricula changes [slides]()
-* Collaborative work on data science integration with course lessons [jamboard](https://jamboard.google.com/d/16xPdskoSVi9dua9EA-brtKw9c_hwgS4qhMLNBbTk_WM/edit?usp=sharing)
+### Development of data science lessons (2:30 PM to 4:00 PM)
 
-### Wrap-up (15 minutes)
+* Start developing a lesson of your own
+* Individually or in small groups - use the tools you want to practice
+
 
 ***
 
 ## Additional Resources
 
-* ESA 2019 BEDE Network workshop (like this one by longer!) [https://mlammens.github.io/ESA2019-BEDENet/](https://mlammens.github.io/ESA2019-BEDENet/)
 * BEDE Network QUBES Hub page [https://qubeshub.org/community/groups/bede/](https://qubeshub.org/community/groups/bede/)
 * DataOne best practices [https://www.dataone.org/best-practices](https://www.dataone.org/best-practices)
 * Lessons learned from teaching Data Science [https://www.dataschool.io/teaching-data-science/](https://www.dataschool.io/teaching-data-science/)
