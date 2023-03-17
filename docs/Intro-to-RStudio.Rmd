@@ -1,9 +1,9 @@
 ---
 title: "Introduction to R/RStudio"
 output:
-  word_document:
-    toc: yes
   html_document:
+    toc: yes
+  word_document:
     toc: yes
 ---
 
@@ -42,10 +42,10 @@ There are four panels in the RStudio interface (though you may only have three o
 
 Good file management is important in data science. We'll start working on this now.
 
-* Make a `ESA-2022-DataSci` directory / folder
-* Make a `data` directory / folder within `ESA-2022-DataSci`
-* Make a `scripts` directory / folder within `ESA-2022-DataSci`
-* In RStudio, set working directory to your new ``ESA-2022-DataSci`` directory
+* Make a `DataSci` directory / folder
+* Make a `data` directory / folder within `DataSci`
+* Make a `scripts` directory / folder within `DataSci`
+* In RStudio, set working directory to your new ``DataSci`` directory
 
 #### Setting your working directory
 
@@ -54,15 +54,15 @@ Point-and-click method - Use 'Session' > 'Set Working Directory' > 'Choose Direc
 Using the R Console:
 
 ```{r, eval=FALSE}
-setwd("/Users/maiellolammens/ESA-2022-DataSci/")
+setwd("/Users/maiellolammens/DataSci/")
 ```
 
 ### Making an R Project
 
-Let's make a new R Project associated with your `ESA-2022-DataSci` directory. 
+Let's make a new R Project associated with your `DataSci` directory. 
 To make a new project, got to the upper right-hand side of the RStudio interface, where it says **Project: (None)**.
 Click the little downward arrow, select "New Project", then select "Existing Directory" from the window that pops up. 
-Use the graphical user interface (GUI) to navigate to the `ESA-2022-DataSci` directory, then select "Create Project".
+Use the graphical user interface (GUI) to navigate to the `DataSci` directory, then select "Create Project".
 
 ### Getting help
 
@@ -306,8 +306,8 @@ But the easiest type of file to read in is a comma separated values (CSV) file.
 You can save an Excel workbook (or Numbers workbook or Google Sheet) as a CSV file by using the "Save as ..." menu item. 
 
 Let's read in the soil data from our Speed Data Science activity using the function `read.csv`.
-First, you'll need to download the data set from the QUBES site for this workshop. 
-Second, move the file to the `data` sub-folder in your `ESA-2022-DataSci` folder.
+First, you'll need to download the data set from the workshop site. 
+Second, move the file to the `data` sub-folder in your `DataSci` folder.
 Then, we'll read in the file. **NOTE: you may need to adjust the path to the file.**
 
 ```{r, echo=FALSE}

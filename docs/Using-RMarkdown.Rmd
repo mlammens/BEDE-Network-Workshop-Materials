@@ -1,6 +1,8 @@
 ---
 title: "Using Markdown/RMarkdown"
 output:
+  word_document:
+    toc: yes
   html_document:
     toc: yes
 ---
