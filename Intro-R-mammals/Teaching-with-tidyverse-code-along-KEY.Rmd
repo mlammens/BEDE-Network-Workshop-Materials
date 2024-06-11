@@ -1,0 +1,643 @@
+---
+title: "Teaching with tidyverse- KEY"
+author: "Kait Farrell (kfarrell@uga.edu)"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: 4
+---
+
+# Let's dive in!
+
+Let's work together to build a report for an ecological data set we'll explore today. First, write some text describing that you are going to read in necessary R packages and your data set.
+
+## Adding code chunks
+
+To add a code chunk, go to a new line and click the "Insert" button at the top of the Source panel (green square with a C and + symbol), then select "R" This will create an empty **code chunk**.
+
+**All R code within your Markdown file must be embedded within code chunks.**
+
+## Install and load packages
+
+The first step to start any R exploration is to install and activate the "packages" that perform the behind-the-scenes functions of your analysis.
+
+For our lesson (& recommended when teaching!), we will primarily use packages that are contained within the `tidyverse`, which is a wrapper package or "metapackage" that lets you install and open one package, but gives you access to many other useful packages that are embedded behind the scenes. The core `tidyverse` includes *almost* all of the packages that your students are likely to use in day-to-day data analyses.
+
+We will also install and load the `here` package, which helps facilitate seamless file access across your directory subfolders.
+
+To install a package, you run the following command *within* a code chunk. Note that with the `install.packages()` command, the package name **always** needs to be in quotation marks.
+
+```{r Install packages, eval = FALSE}
+
+# You only need to install each package ONCE on your computer
+install.packages("tidyverse", repos = "http://cran.rstudio.com/")
+install.packages("here", repos = "http://cran.rstudio.com/")
+
+```
+
+Next, you need to tell R to *activate* the package(s) you want to use. Use the following syntax to load each package. Note that in this command, the package name is *not* in quotes!
+
+```{r Load packages, message = FALSE}
+
+library(tidyverse)
+library(here)
+
+```
+
+# Reading in data
+
+One of the most basic things you will need to do in R is read in data sets, which may be imported from Excel files, text files, and more. The easiest type of file to read in to R is a comma separated values (CSV) file. You can save an Excel workbook (or Numbers workbook or Google Sheet) as a CSV file by using the "Save as ..." menu item.
+
+Let's read in a small mammal dataset collected by the National Ecological Observatory Network (NEON). We'll use the function `read_csv()`. This will import the dataset as a `tibble`, which is like a dataframe but "lazy and surly"; they "do less and complain more". For example, a tibble will not change variable names during import or change variable types, which can sometimes happen when importing a dataframe using `base R`.
+
+We'll also embed a structure from the `here` package to specify the file location within our working directory. This is important because sometimes .Rmd files can get grumpy if they are in a different subfolder than the data files we are trying to read or write.
+
+First, you'll need to download the data set from the workshop site into the `data` sub-folder in your `DataSci` folder. Then, we'll read in the file.
+
+```{r Read in data}
+
+mammals <- read_csv(here("data", "NEON_small_mammals.csv"))
+
+```
+
+After importing a dataset, we want to take a quick look at the data. There are a number of ways we can do this!
+
+```{r Preview data}
+
+# Print the first 6 rows of the dataset to the console
+head(mammals)
+
+# Get a "glimpse" of the dataset, including the value types of each variable
+glimpse(mammals)
+
+# Print the structure of the dataset 
+str(mammals)
+
+# To open the dataset in a new window, use view()
+view(mammals)
+
+```
+
+We may also want to get a quick overview of the mean and variability of our variables. We can use a `summary()` function to return many of the "standard" summary statistics.
+
+```{r Summarize dataset}
+
+summary(mammals)
+
+```
+
+Finally, we might want to examine specific columns; for example, to see how many unique sites or unique species the dataset includes.
+
+```{r Print unique values}
+
+unique(mammals$siteID)
+
+unique(mammals$taxonID)
+
+```
+
+Based on these early looks that there is a lot going on in this dataset! We have 63 different variable columns and over 7000 unique observations (rows) collected across 21 different taxa from two distinct sites. Often, when starting with raw datasets, we want to apply a number of `wrangling` functions to clean things up and focus our analysis or visualization.
+
+This is where functions from within the `dplyr` function (part of the `tidyverse`) come in handy!
+
+------------------------------------------------------------------------
+
+# Wrangling with dplyr
+
+Some of the core functions of `dplyr` that we use for data wrangling are:
+
+-   **select():** subset columns
+-   **filter():** subset rows on conditions
+-   **mutate():** create new columns by using information from other columns
+-   **rename():** change names of existing columns
+-   **count():** count discrete values
+-   **group_by()** and **summarize():** calculate summary statistics for grouped data
+-   **arrange():** sort results
+
+### Selecting columns and filtering rows
+
+We can select specific *columns* from our dataset to retain (or remove) using `select()` commands. When used on its own, the select command requires that we first name the data object we're selecting from within, then indicate the focal columns.
+
+```{r dplyr select()}
+
+# Keep only the columns for siteID, taxonID, sex, and weight
+select_test <- select(mammals, siteID, taxonID, sex, weight)
+
+```
+
+Notice that in our new `select_test` object, there are only 4 columns, but still all 7273 observations.
+
+If we want to keep most columns but exclude a few specific ones, we can use a `-` before our column names to "anti-select" them.
+
+```{r "anti-select"}
+
+# Exclude uid, nightuid columns
+anti_select <- select(mammals, -uid, -nightuid)
+
+head(anti_select)
+
+```
+
+Similarly, we can use a `filter()` to retain (or remove) *rows* from our dataset based on criteria we specify.
+
+```{r dplyr filter()}
+
+# Keep only observations of "BLBR" taxon
+blbr <- filter(mammals, 
+               taxonID == "BLBR")
+
+```
+
+```{r Filter multiple criteria}
+
+# Include multiple criteria to further refine
+blbr_small_females <- filter(mammals, 
+                             taxonID == "BLBR", 
+                             sex == "F", 
+                             weight < 15)
+
+```
+
+### Piping functions together
+
+As we're applying these functions, you notice we're saving the output as separate data objects. If we don't have a need for that specific subset in the future, it is considered an *intermediate object*. We want to avoid filling up our RStudio environment with intermediate objects to minimize confusion about what we're working with.
+
+Instead, we can take advantage of "pipes" from the `magrittr` package (also within `tidyverse`!) to link multiple functions together in a wrangling/analysis workflow. You can think of the pipe saying "and then" when linking multiple steps in your code.
+
+Using pipes can be helpful because it not only reduces our need to save unnecessary intermediate objects, but also allows us to more easy "read" the wrangling actions we're taking in a code chunk.
+
+Let's try piping together a number of wrangling steps to select and filter our mammals data to create a subset that includes only male and female adults with a measured weight and hindfoot length (no `NA`s). We'd also like our subset to only include the variables: siteID, collectDate, taxonID, sex, weight, and hindfootLength.
+
+```{r Piped workflow}
+
+subset <- mammals %>% 
+  filter(sex %in% c("M", "F"), 
+         !is.na(weight),
+         !is.na(hindfootLength)) %>% 
+  select(siteID, collectDate, taxonID, sex, weight, totalLength)
+
+```
+
+In one connected step, we have quickly cleared out over 1000 non-relevant observations and focused our subset to the 5 columns relevant to our analysis! (Think of how much of a hassle that could be to do in Excel!)
+
+### Create new columns
+
+Sometimes, we may want to create a new column based on information in an existing column-- for example, to convert units for a variable, add two columns together, extract information from within a column, etc.
+
+To do this, we can use `mutate()` functions.
+
+```{r dplyr mutate()}
+
+# Create stand-alone "year" column from collectDate
+subset %>% 
+  mutate(year = year(collectDate))
+
+```
+
+```{r dplyr rename()}
+
+# Convert weight from grams to kg
+subset <- subset %>% 
+  rename(weight_g = weight) %>% 
+  mutate(weight_kg = weight_g / 1000)
+
+subset
+
+```
+
+We also snuck a `rename()` function in to update the column name of our original weight, as we want to be clear about units for each column!
+
+### Grouping & summarizing
+
+Another powerful set of `dplyr` functions allows us to use a **split-apply-combine** paradigm, where we:
+
+-   **split** the data into groups
+-   **apply** an analysis to each group
+-   **combine** the results in a table
+
+To do this, we pair a `group_by()` command with `summarize()`
+
+Let's try this to calculate the mean weight in grams + its standard deviation of each sampled taxa!
+
+```{r group_by() & summarize()}
+
+subset %>% 
+  group_by(taxonID) %>% 
+  summarize(mean_weight_g = mean(weight_g),
+            sd_weight_g = sd(weight_g),
+            count = n())
+
+```
+
+We can further refine our summaries by including multiple variables within our `group_by()` command.
+
+For example, we can calculate those same weight summary statistics for male and female individuals within each taxon by adding **just one word** to our earlier command!
+
+```{r}
+
+subset %>% 
+  group_by(taxonID, sex) %>% 
+  summarize(mean_weight_g = mean(weight_g),
+            sd_weight_g = sd(weight_g),
+            count = n())
+
+```
+
+As an aside, if you want your summary values to be rounded to a specific number of decimal points, you can add that in, too, using a round() command *within* your summarize functions. Just be careful about keeping track of your parentheses!! *(Turning on **rainbow parentheses** within your RStudio Global Settings can help by providing an additional visual cue about lining up open- and close-parentheses!)*
+
+```{r Round values}
+
+weight_summary <- subset %>% 
+  group_by(taxonID, sex) %>% 
+  summarize(mean_weight_g = round(mean(weight_g), 2),
+            sd_weight_g = round(sd(weight_g), 2),
+            count = n())
+
+weight_summary
+
+```
+
+### Saving & exporting data
+
+Often, a .Rmd file will import a raw data then do some wrangling, analysis, and/or visualization. If you want to save a copy of your "cleaned" or processed data, you can use a `write_csv()` command in conjunction with features from `here`:
+
+```{r}
+
+weight_summary %>% 
+  write_csv(here("data", "weight_summary.csv"))
+
+```
+
+### Challenge! Data wrangling with dplyr
+
+Try using as single set of piped `dplyr` functions to accomplish the following task, starting with the full `mammals` data set we imported:
+
+Determine how many unique PELE (*Peromyscus leucopus*) were sampled from each site in 2015, and calculate the mean hindfoot length and standard error by sex.
+
+```{r CHALLENGE 1!}
+
+# KEY
+mammals %>% 
+  mutate(year = year(collectDate)) %>% 
+  filter(year == 2015,
+         taxonID == "PELE",
+         recapture == "N",
+         !is.na(hindfootLength)) %>% 
+  group_by(sex, siteID) %>% 
+  summarize(count = n(),
+            mean_hindfoot = mean(hindfootLength, drop.na = T),
+            se_hindfoot = (sd(hindfootLength)/sqrt(count)))
+
+```
+
+### Challenge! Data wrangling with dplyr
+
+For our plotting exercise, we'd like to focus on *smaller* rodents (less than or equal to 60 grams) captured *only* at the SCBI site *since* 2020. Use piped commands to create a new data object, `plot_mamm` from the `mammals` data that accomplishes this includes only the relevant observations.
+
+```{r CHALLENGE 2!}
+
+# KEY
+plot_mamm <- mammals %>% 
+  mutate(year = year(collectDate)) %>% 
+  filter(weight <= 60,
+         siteID == "SCBI",
+         year == 2020) %>% 
+  arrange(weight)
+
+tail(plot_mamm$weight)
+
+unique(plot_mamm$siteID)
+
+unique(plot_mamm$year)
+
+```
+
+------------------------------------------------------------------------
+
+# Data visualization with `ggplot2`
+
+We will focus on plotting using the `ggplot2` package, which automatically loads as part of the `tidyverse` when you run the command `library(tidyverse)`.
+
+A strength and challenge of using `ggplot2` is that there are nearly endless ways you can customize and refine your plots. As such, it's important to have a useful and readable reference guide that you can search when you know what you *want* to do, but aren't yet sure *how* to do it in ggplot phrasing.
+
+I recommend the following three resources as a starting point:
+
+-   [ggplot2 reference manual](https://ggplot2.tidyverse.org/reference/index.html)
+-   [R Graphics Cookbook](https://r-graphics.org/)
+-   [R colors](https://r-charts.com/colors/) (specifically for finding *just* the right color options for your plots)
+
+## Recipe for a ggplot
+
+You can think about building a ggplot like adding layers to a cake. While you can add as many layers as you like to refine and customize a plot, every ggplot requires three key ingredients: - ggplot: the initial canvas we're working on - geom: geometric objects (i.e. the type of plot - histogram, points, line, etc) - aes: aesthetic mappings (e.g., which variables go on x- and y-axes)
+
+### Histograms
+
+An example of a "bare bones" ggplot for our mammals data could be as follows, to create a histogram of measured weights:
+
+```{r Make a histogram}
+
+ggplot(data = plot_mamm,
+       aes(x = weight)) +
+  geom_histogram()
+
+```
+
+While your data plotted, you probably got a warning to the effect of "`stat_bin()` using `bins = 30`. Pick better value with `binwidth`."
+
+This means that there is a mismatch between how many "bins" along the x-axis you are setting up, relative to the size of the dataset.
+
+### Challenge - Enter a Help command in the Console (e.g., `?geom_histogram`) to determine how to change the number of bins used in our plot
+
+```{r CHALLENGE 3!}
+
+# KEY
+ggplot(data = plot_mamm,
+       aes(x = weight)) +
+  geom_histogram(bins = 15)
+
+```
+
+You may also have noticed another warning: "Removed 2 rows containing non-finite values (`stat_bin()`)." This is just R giving you a heads-up that two observations in your dataset were missing values for the requested x-axis variable (in this case, bill length), so those observations were not plotted.
+
+It is important when making your own figures (& training your students!), that you investigate whether this type of warning is driven by NA values in your dataset (no problem) *or* if you have manually set axis limits that are excluding data points (adjust your axes to encompass your observations!).
+
+Now that the bin number is a better fit to our dataset, we can add additional aesthetics and ggplot layers to customize our plot and the story it is telling.
+
+For example, we can include a `labs()` command to customize our x- and y-axis labels, & add a built-in theme command to adjust the non-data aesthetics of our figure.
+
+Some of the [built-in themes](https://ggplot2.tidyverse.org/reference/ggtheme.html) include `theme_bw()`, `theme_bw()`, `theme_light`, etc.
+
+### Challenge - Add custom x- and y-axis labels to your plot, and include a default theme of your choosing
+
+```{r CHALLENGE 4!}
+
+# KEY
+ggplot(data = plot_mamm,
+       aes(x = weight)) +
+  geom_histogram(bins = 15) +
+  labs(x = "Weight (g)", 
+       y = "Observations") +
+  theme_bw()
+
+```
+
+We can include an additional mapping aesthetic to tell R to fill our histogram bars based on the taxonID
+
+```{r}
+
+ggplot(data = plot_mamm,
+       aes(x = weight,
+           fill = taxonID)) +
+  geom_histogram(bins = 15) +
+  labs(x = "Weight (g)", 
+        y = "Observations") +
+ theme_bw()
+
+```
+
+Finally, we should adjust the y-axis so that allour data are encompassed within the axis limits.
+
+```{r}
+
+ggplot(data = plot_mamm,
+       aes(x = weight,
+             fill = taxonID)) +
+  geom_histogram(bins = 15) +
+  labs(x = "Weight (g)", 
+        y = "Observations") +
+  scale_y_continuous(limits = c(0, 150),
+                     breaks = seq(0, 150, 25)) +
+  theme_bw()
+
+```
+
+### Density plots
+
+You use similar approaches to make a density plot, but substitute in `geom_density()` as your geom. This could be a good approach to more clearly visualize the distributions of weight by taxon in our data!
+
+```{r Make a density plot}
+
+ggplot(data = plot_mamm,
+       aes(x = weight,
+             fill = taxonID)) +
+  geom_density(alpha = 0.5) +
+  labs(x = "Weight (g)", 
+        y = "Observations") +
+  scale_y_continuous(limits = c(0, 0.6)) +
+  theme_bw()
+
+```
+
+## Boxplots
+
+Boxplots are an information-rich way to display distributions, because they explicitly visualize the median, interquartile range, and any outliers across categorical variables (x-axis).
+
+When making a boxplot, you'll need to map aesthetics for your x-axis variable (something categorical) *and* your y-axis (something numeric). Aesthetics for `fill` or `color` are optional.
+
+For example, our weight data visualized as boxplots by taxon looks like:
+
+```{r}
+
+ggplot(data = plot_mamm,
+       aes(x = taxonID,
+           y = weight,
+           fill = taxonID)) +
+    geom_boxplot() +
+    labs(x = "Taxon", 
+        y = "Weight (g)") +
+    theme_bw()
+
+```
+
+While boxplots pack in a lot of information, it can still be useful to include a visualization of the full dataset. We can use an additional geom, like `geom_jitter()` to include the raw data points.
+
+We'll include this geom *before* our `geom_boxplot()` call so that the points appear *behind* the boxplots (layers are added to our ggplot in the order they are written). Note that we'll now specify `fill = NA` within our `geom_boxplot()` call so that the bo
+
+```{r}
+
+mammals %>% 
+  drop_na(weight) %>% 
+  ggplot(aes(x = taxonID,
+             y = weight,
+             col = taxonID)) +
+  geom_jitter(width = 0.2, height = 0,
+              alpha = 0.6) +
+  geom_boxplot(fill = NA, col = "gray10") +
+    labs(x = "Taxon", 
+        y = "Weight (g)") +
+    theme_bw()
+
+
+ggplot(data = plot_mamm,
+       aes(x = taxonID,
+           y = weight,
+           col = taxonID)) +
+  geom_jitter(width = 0.2, height = 0,
+              alpha = 0.6) +
+  geom_boxplot(fill = NA, col = "gray10") +
+  labs(x = "Taxon", 
+       y = "Weight (g)") +
+  theme_bw()
+
+```
+
+## Scatter plots
+
+We create a scatter plot between two continuous variables with `geom_point()`.
+
+First, let's focus our analysis on just "PELE" individuals. Use a code chunk to create this new subset from the `mammals` data.
+
+```{r Create PELE subset}
+
+PELE <- mammals %>% 
+  filter(taxonID == "PELE")
+
+```
+
+```{r Make a scatterplot}
+
+ggplot(data = PELE, 
+       aes(x = hindfootLength,
+           y = weight,
+           col = taxonID)) + 
+  geom_point() + 
+  theme_bw()
+
+```
+
+We can easily add a trendline to a plot using `geom_smooth()`. To ensure it is a *linear* fit, include `method = lm` within your `geom_smooth()` command.
+
+```{r Add a linear trendline}
+
+ggplot(data = PELE, 
+       aes(x = hindfootLength,
+           y = weight,
+           col = taxonID)) + 
+  geom_point() + 
+  geom_smooth(method = lm) +
+  theme_bw()
+
+```
+
+**Note!** It's best practice to only include linear trendlines when the relationship you are visualizing is **statistically significant**. R will not *stop* you from fitting any line you want to your data, so it is up to you to separately run appropriate statistical tests to ensure what you are visualizing is accurate and meaningful!
+
+------------------------------------------------------------------------
+
+# Time remaining?
+
+Let's take a *super* quick look at how to do some statistical analyses!
+
+## Linear regression
+
+We use linear regression to quantify the slope of best fit line between two continuous variables and test whether that slope is significantly different from zero. Our regression model will also tell us about how strong a predicive relationship is between our two variables.
+
+We use the `lm()` function to set up our linear model. Most model functions take a function argument and a data argument. The function represents the relationship you're testing for between variables and the data takes the name of the data object.
+
+For exploratory purposes, let's look at the (potential) linear relationship we plotted above:
+
+```{r Linear regression}
+
+# Specify our linear model
+lm_fit <- lm(hindfootLength ~ weight, data = mammals)
+
+# Print regression output
+summary(lm_fit)
+
+```
+
+For more help interpreting model output, check out this [explainer](https://towardsdatascience.com/understanding-linear-regression-output-in-r-7a9cbda948b3)
+
+It's important to remember that our regression test has a number of assumptions that we need to confirm it meets before we move forward in our model interpretation!
+
+**Linear Regression Model Assumptions:**
+
+-   Observations are independent of each other
+-   There is a linear relationship between x and y
+-   Values of model residuals are normally distributed
+-   Variance of model residuals is the same across all values of x
+
+We should know whether the first assumption was met based on how data were collected. We can assess the other three assumptions using the `plot()` function to graph elements of our fitted linear model (`lm_fit`).
+
+*Linear Relationship: Residuals vs. Fitted Plot* We plot the residuals vs. fitted (predicted) values of y and look at the relationship. Ideally, the points should be scattered around a (roughly) horizontal line centered at zero.
+
+```{r}
+
+# Residuals vs. fitted plot
+plot(lm_fit, which = 1)
+
+```
+
+*Normality of Residuals: Q-Q Plot* If the residuals are normally distributed, we expect the points to fall (approximately) along the diagonal line. The "tails" should not veer too far in either direction.
+
+```{r}
+
+# QQ residuals plot
+plot(lm_fit, which = 2)
+
+```
+
+*Consistent Variance of Residuals: Scale-Location Plot* To test this, we use the "scale-location" plot of standardized residuals vs. fitted values. The fit should be roughly a horizontal line with points scattered around it randomly.
+
+```{r}
+
+# Scale-Location plot
+plot(lm_fit, which = 3)
+
+```
+
+You can also have R plot all three panels at once for you to assess, using the following chunk:
+
+```{r}
+
+# Tell R to plot 1 row of 3 graphs
+par(mfrow = c(1, 3))
+
+plot(lm_fit, which = 1:3)
+
+```
+
+For a quick reference on what "good" and "bad" versions of these plots look like (and additional details on how to interpret them) see [this helpful resource](https://data.library.virginia.edu/diagnostic-plots/)
+
+
+
+## ANOVA
+
+We use ANalysis Of VAriance (ANOVA) to test for differences in the mean among categorical groups or factors. 
+
+We use the `aov()` function to create our ANOVA model using the same syntax as we did with the `lm()` function.
+
+After we have assigned our model, we use the `summary()` function to view the output of the ANOVA test. This summary shows us whether at least one of the categorical groups (e.g. species) differed in terms of the continuous variable (e.g. body mass), but it doesn't tell us specifically which species were different from each other. To do that, we use a Tukey post-hoc test (`TukeyHSD()`) to identify which pairs of species differed from each other.
+
+```{r}
+
+aov_subset <- mammals %>% 
+  mutate(year = year(collectDate)) %>% 
+  filter(year == 2015,
+         sex == "F",
+         taxonID %in% c("PELE", "MIPE", "BLBR"),
+         recapture == "N",
+         !is.na(hindfootLength))
+
+# Specify our model
+aov_fit <- aov(hindfootLength ~ taxonID,
+               data = aov_subset)
+
+# View model output
+summary(aov_fit)
+
+# Conduct Tukey HSD test 
+TukeyHSD(aov_fit)
+
+```
+### Challenge! Make a graph to visualize your findings! 
+Add a chunk to make a ggplot that effectively visualizes the findings of the ANOVA we conducted above! 
+
+```{r CHALLENGE 5!}
+
+
+```
+
+------------------------------------------------------------------------
+
+Thank you for joining this session! I hope it's given you some ideas for how you might integrate R into your own classes! 
