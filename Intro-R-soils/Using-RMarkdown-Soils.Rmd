@@ -58,7 +58,7 @@ Let's make a chunk to add the soil data set.
 
 
 ```{r soil_data}
-soil_data <- read.csv("https://www.dropbox.com/s/ues1zq1rx8at0pq/soil_nutrient_data.csv?dl=1")
+soil_data <- read.csv("https://raw.githubusercontent.com/mlammens/BEDE-Network-Workshop-Materials/main/Intro-R-soils/soil_nutrient_data.csv")
 ```
 
 You can execute the R code above by either using one of the "Run" functions (look in the upper-right corner of the editor pane), clicking the little green arrow in the upper right corner of the code chunk (note, this will run all code in the chunk), or by pressing CMD + ENTR (Mac) or CNTR + ENTR (Windows) while your cursor is on the line you wish to execute.

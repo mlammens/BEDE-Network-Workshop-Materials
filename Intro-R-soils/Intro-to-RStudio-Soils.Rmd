@@ -44,20 +44,12 @@ Good file management is important in data science. We'll start working on this n
 
 * Make a `DataSci` directory / folder
 * Make a `data` directory / folder within `DataSci`
-* Make a `scripts` directory / folder within `DataSci`
-* In RStudio, set working directory to your new ``DataSci`` directory
+* OPTIONAL: Make a `scripts` directory / folder within `DataSci`
 
-#### Setting your working directory
 
-Point-and-click method - Use 'Session' > 'Set Working Directory' > 'Choose Directory'.
+#### Using R Projects
 
-Using the R Console:
-
-```{r, eval=FALSE}
-setwd("/Users/maiellolammens/DataSci/")
-```
-
-Next, we will make an R Project. The benefit to using R Projects is that it will reside within your project folder and act as "glue" to make it easier to connect your datafiles to your code files (or for your students!). It also encourages good file management by having related files all in the same location or set of folders. If you use R Projects, you can skip this step of setting a working directory, which won't be needed, as it will use "relative paths" to find your files, located in the same loction as the .Rproj file that the next step will create. This can be especially helpful if you work on more than one computer, or are sharing files with collaborators, who won't need to change the working directory anymore.
+Next, we will make an R Project. The benefit to using R Projects is that it will reside within your project folder and act as "glue" to make it easier to connect your data files to your code files (or for your students!). It also encourages good file management by having related files all in the same location or set of folders. If you use R Projects, you can skip this step of setting a working directory, which won't be needed, as it will use "relative paths" to find your files, located in the same location as the .Rproj file that the next step will create. This can be especially helpful if you work on more than one computer, or are sharing files with collaborators, who won't need to change the working directory anymore.
 
 
 ### Making an R Project
@@ -167,6 +159,18 @@ getwd()
 
 # Move to a different directory?
 setwd(".")
+```
+
+#### OPTIONAL: Setting your working directory
+
+**You can set your working directory, but this is not necessary when you use Projects.**
+
+Point-and-click method - Use 'Session' > 'Set Working Directory' > 'Choose Directory'.
+
+Using the R Console:
+
+```{r, eval=FALSE}
+setwd("/Users/maiellolammens/DataSci/")
 ```
 
 #### Additional file management points
@@ -449,18 +453,17 @@ used to create a plot is a little more involved than base R (i.e., the `graphics
 ### Aside: Installing and loading packages
 
 First, we need to install the `ggplot2` package.
-
-**STOP** did you install the `tidyverse` package?
+Today, we're going to do this by installing the `tidyverse` package?
 
 ```{r installggplot2, eval=FALSE}
 # Only need to do this once
-install.packages("ggplot2")
+install.packages("tidyverse")
 ```
 
 Then load it:
 
 ```{r loadggplot2, message=FALSE}
-library(ggplot2)
+library(tidyverse)
 ```
 
 **NOTE: You will only have to install a new package once, but you will need to call the `library` function at the beginning of every new R session.**
@@ -538,6 +541,101 @@ Using R, remake one of the plots your group worked on during the Speed Data Scie
 Using R, read in a datafile from your own class or research, look at the summary statistics for a few of the columns, and then make a plot of your own choosing.
 
 ***
+
+## Data wrangling in R
+
+Often, when workig with our data sets, we want to apply a number of `wrangling` functions to clean things up and focus our analysis or visualization.
+
+This is where functions from within the `dplyr` function (part of the `tidyverse`) come in handy!
+
+### Wrangling with `dplyr`
+
+Some of the core functions of `dplyr` that we use for data wrangling are:
+
+-   **select():** subset columns
+-   **filter():** subset rows on conditions
+-   **mutate():** create new columns by using information from other columns
+-   **rename():** change names of existing columns
+-   **count():** count discrete values
+-   **group_by()** and **summarize():** calculate summary statistics for grouped data
+-   **arrange():** sort results
+
+#### Selecting columns and filtering rows
+
+We can select specific *columns* from our dataset to retain (or remove) using `select()` commands. When used on its own, the select command requires that we first name the data object we're selecting from within, then indicate the focal columns.
+
+```{r dplyr select()}
+
+# Keep only the columns for site and phosphorus_lbacre
+select_test <- select(soil_data, site, phosphorus_lbacre)
+
+```
+
+Note that we have a new data frame with only two columns.
+
+We can also exclude columns using the `-` sign.
+
+```{r}
+select(soil_data, -date, -condition, -replicate)
+```
+
+
+Similarly, we can use a `filter()` to retain (or remove) *rows* from our dataset based on criteria we specify.
+
+```{r}
+filter(soil_data, site == "osa_top")
+```
+
+***
+
+#### Aside: Logical operators
+
+* ==
+* !=
+* `>`
+* `>=`
+* <
+* <=
+
+***
+
+### Piping functions together
+
+As we're applying these functions, you notice we're saving the output as separate data objects. If we don't have a need for that specific subset in the future, it is considered an *intermediate object*. We want to avoid filling up our RStudio environment with intermediate objects to minimize confusion about what we're working with.
+
+Instead, we can take advantage of "pipes" from the `magrittr` package (also within `tidyverse`!) to link multiple functions together in a wrangling/analysis workflow. You can think of the pipe saying "and then" when linking multiple steps in your code.
+
+Using pipes can be helpful because it not only reduces our need to save unnecessary intermediate objects, but also allows us to more easy "read" the wrangling actions we're taking in a code chunk.
+
+Let's try piping together a number of wrangling steps to select and filter our data.
+
+```{r}
+soil_data %>%
+  filter(site == "osa_top") %>%
+  select(-date, -condition, -replicate)
+```
+
+
+#### Grouping & summarizing
+
+Another powerful set of `dplyr` functions allows us to use a **split-apply-combine** paradigm, where we:
+
+-   **split** the data into groups
+-   **apply** an analysis to each group
+-   **combine** the results in a table
+
+To do this, we pair a `group_by()` command with `summarize()`
+
+Let's try this to calculate the mean and standard deviation of phosphorus levels at each site!
+
+```{r}
+soil_data %>%
+  select(site, phosphorus_lbacre) %>%
+  group_by(site) %>%
+  summarise(mean_phos = mean(phosphorus_lbacre),
+            sd_phos = sd(phosphorus_lbacre))
+```
+
 
 ## Instructor's Notes
 
